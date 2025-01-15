@@ -137,3 +137,7 @@ FIREBASE_CRED = credentials.Certificate("keys/landing-key.json")
 firebase_admin.initialize_app(FIREBASE_CRED, {
     'databaseURL': 'https://landing-b540a-default-rtdb.firebaseio.com/'
 })
+
+LOGIN_URL = '/login/'
+    
+LOGIN_REDIRECT_URL = '/'
