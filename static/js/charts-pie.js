@@ -37,7 +37,7 @@ window.myPie = new Chart(pieCtx, pieConfig)
 countCommentsByHour = (data) => {
 
   // Inicializar contadores por rango de horas
-  const labels = ["0 a.m. - 8 a.m.", "8 a.m. - 16 p.m.", "16 p.m. - 0 a.m."];
+  const labels = ["0 a.m. - 8 a.m.", "8 a.m. - 4 p.m.", "4 p.m. - 0 a.m."];
   const counts = [0, 0, 0];
 
   Object.values(data).forEach(record => {

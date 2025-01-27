@@ -7,7 +7,7 @@ const lineConfig = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
       {
-        label: 'Organic',
+        label: 'Respuestas',
         /**
          * These colors come from Tailwind CSS palette
          * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
@@ -16,17 +16,6 @@ const lineConfig = {
         borderColor: '#0694a2',
         data: [43, 48, 40, 54, 67, 73, 70],
         fill: false,
-      },
-      {
-        label: 'Paid',
-        fill: false,
-        /**
-         * These colors come from Tailwind CSS palette
-         * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
-         */
-        backgroundColor: '#7e3af2',
-        borderColor: '#7e3af2',
-        data: [24, 50, 64, 74, 52, 51, 65],
       },
     ],
   },
@@ -48,6 +37,12 @@ const lineConfig = {
       intersect: true,
     },
     scales: {
+      yAxes: [{
+        ticks: {
+            precision: 0,
+            beginAtZero: true
+        }
+      }],
       x: {
         display: true,
         scaleLabel: {
@@ -69,3 +64,42 @@ const lineConfig = {
 // change this to the id of your chart element in HMTL
 const lineCtx = document.getElementById('line')
 window.myLine = new Chart(lineCtx, lineConfig)
+
+const countCommentsByDay = (data) => {
+  let map = new Map();
+  for(entry of Object.values(data)){
+    let date = entry.saved.split(",")[0];
+    let currentValue = map.get(date) ? map.get(date) : 0;
+    map.set(date, currentValue + 1);
+  }
+  let days = Array.from(map.keys());
+  let counts = new Array();
+  let comparator = (date1, date2) => {
+    const [day1, month1, year1] = date1.split('/').map(Number);
+    const [day2, month2, year2] = date2.split('/').map(Number);
+    const d1 = new Date(year1, month1 - 1, day1);
+    const d2 = new Date(year2, month2 - 1, day2);
+    return d1 - d2;
+  };
+  days.sort(comparator);
+  for(let day of days){
+    counts.push(map.get(day));
+  }
+  return { days, counts }
+};
+
+update = () => {
+  fetch('/api/v1/landing')
+    .then(response => response.json())
+    .then(data => {
+      let { days, counts } = countCommentsByDay(data);
+      window.myLine.data.labels = [];
+      window.myLine.data.datasets[0].data = [];
+      window.myLine.data.labels = [...days]
+      window.myLine.data.datasets[0].data = [...counts]
+      window.myLine.update();
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+update();

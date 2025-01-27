@@ -135,7 +135,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 FIREBASE_CRED = credentials.Certificate("keys/landing-key.json")
 
 firebase_admin.initialize_app(FIREBASE_CRED, {
-    'databaseURL': 'https://landing-b540a-default-rtdb.firebaseio.com/'
+    'databaseURL': 'https://landing-49ce2-default-rtdb.firebaseio.com/'
 })
 
 LOGIN_URL = '/login/'
